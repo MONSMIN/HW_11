@@ -109,7 +109,7 @@ class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
 
-    def iterator(self, page):
+    def iterator(self, page=None):
         while True:
             if self.start_iterate >= len(self.data):
                 break
