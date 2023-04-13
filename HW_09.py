@@ -42,7 +42,7 @@ def show_all(*args, contacts=contacts, page=None):
     if page==None:
         return "\n".join(contact_list)
     else:
-        for records in contacts.iterator(contacts.data.values(), page if page != None else len(contacts)):
+        for records in contacts.iterator(contacts.data, int(page)):
             print('\n'.join([str(record) for record in records]))
 
 

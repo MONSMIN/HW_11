@@ -110,12 +110,11 @@ class AddressBook(UserDict):
         self.data[record.name.value] = record
 
     def iterator(self, page):
-        start = 0
         while True:
-            result = list(islice(self.data.values(), start, start + page))
-            if not result:
+            if self.start_iterate >= len(self.data):
                 break
-            yield result
+            yield list(islice(self.data.items(), self.start_iterate, self.start_iterate + page))
+            self.start_iterate += page
             start += page
             
 
