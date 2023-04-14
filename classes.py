@@ -43,10 +43,10 @@ class Phone(Field):
 
     @value.setter
     def value(self, phone):
-        if phone.isnumeric():
+        if phone.isnumeric() and len(phone) == 12:
             self._value = phone
         else:
-            raise ValueError("Phone number must contain only digits.")
+            raise ValueError("Phone number must contain only 12 digits.")
 
 
 class Birthday(Field):
