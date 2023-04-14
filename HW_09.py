@@ -29,7 +29,7 @@ def add(*args):
     return f'{name},{phone_numbers[0]},{birthday}'
 
 
-def show_all(*args, contacts=contacts, page=None):
+def show_all(*args, contacts=contacts):
     contact_list = []
     for name, record in contacts.data.items():
         phones = ", ".join(str(phone) for phone in record.phone)
@@ -39,25 +39,14 @@ def show_all(*args, contacts=contacts, page=None):
     if not contacts.data:
         return 'No contacts'
 
-    if page==None:
+    page = args[0]
+
+    if not page:
         return "\n".join(contact_list)
     else:
-        for records in contacts.iterator(contacts.data, int(page)):
-            print('\n'.join([str(record) for record in records]))
-
-
-# def show_all(*args, contacts=contacts):
-
-#     contact_list = []
-#     for name, record in contacts.data.items():
-#         phones = ", ".join(str(phone) for phone in record.phone)
-#         days_to_birthday = record.days_to_birthday()
-#         contact_list.append(f"{name} {phones} days to birthday:{days_to_birthday}")
-    
-#     if not contacts.data:
-#         return 'No contacts'
-        
-#     return "\n".join(contact_list)
+        for records in contacts.iterator(int(page)):
+            print('\n'.join([f"{name} {', '.join(str(phone) for phone in record.phone)} days to birthday: {record.days_to_birthday()}" for name, record in records]))
+            print('*' * 100)
     
 
 @input_error

@@ -3,7 +3,6 @@ from datetime import datetime, timedelta, date
 from itertools import islice
 
 
-
 class Field:
     def __init__(self, value):
         self.value = value
@@ -21,7 +20,6 @@ class Field:
     @value.setter
     def value(self, value):
         self._value = value
-
     
  
 class Name(Field):
@@ -30,7 +28,6 @@ class Name(Field):
 
     def __str__(self):
         return "Name: " + super().__str__()
-
 
 
 class Phone(Field):
@@ -50,8 +47,6 @@ class Phone(Field):
             self._value = phone
         else:
             raise ValueError("Phone number must contain only digits.")
-        
-
 
 
 class Birthday(Field):
@@ -67,7 +62,6 @@ class Birthday(Field):
         except ValueError:
             raise ValueError("Incorrect date format, should be dd.mm.yyyy")
         self._value = value
-
 
 
 class Record:
@@ -105,16 +99,18 @@ class Record:
         delta = bday - today
         return delta.days
 
+
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
 
     def iterator(self, page=None):
+        start = 0
         while True:
-            if self.start_iterate >= len(self.data):
+            result = list(islice(self.data.items(), start, start + page))
+            if not result:
                 break
-            yield list(islice(self.data.items(), self.start_iterate, self.start_iterate + page))
-            self.start_iterate += page
+            yield result
             start += page
             
 
