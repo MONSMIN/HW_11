@@ -22,31 +22,45 @@ def input_error(func):
 def add(*args):
     list_of_param = args[0].split()
     name = list_of_param[0]
-    phone_numbers = [Phone(phone_number) for phone_number in list_of_param[1:-1]]
-    birthday = Birthday(list_of_param[-1])
+    birthday = None
+    phone_numbers = []
+    for param in list_of_param[1:]:
+        if len(param) == 12 and param.isnumeric():
+            phone_numbers.append(Phone(param))
+        else:
+            birthday = Birthday(param)
+
     record = Record(Name(name), phone_numbers, birthday)
     contacts.add_record(record)
+
+    if not birthday:
+        return f'{name}, {phone_numbers[0]}'
     return f'{name},{phone_numbers[0]},{birthday}'
 
 
 def show_all(*args, contacts=contacts):
-    contact_list = []
-    for name, record in contacts.data.items():
-        phones = ", ".join(str(phone) for phone in record.phone)
-        days_to_birthday = record.days_to_birthday()
-        contact_list.append(f"{name} {phones} days to birthday:{days_to_birthday}")
-
     if not contacts.data:
         return 'No contacts'
+    
+    contact_list = []
+    for name, record in contacts.data.items():
+        phones = ', '.join(str(phone) for phone in record.phone)
+        if record.birthday:
+            contact_list.append(f"{name} {phones} days to birthday: {record.days_to_birthday()}")
+        else:
+            contact_list.append(f"{name} {phones}, Date of birth is not specified")
 
     page = args[0]
 
     if not page:
         return "\n".join(contact_list)
-    else:
-        for records in contacts.iterator(int(page)):
-            print('\n'.join([f"{name} {', '.join(str(phone) for phone in record.phone)} days to birthday: {record.days_to_birthday()}" for name, record in records]))
-            print('*' * 100)
+    
+    for records in contacts.iterator(int(page)):
+        for name, record in records:
+            phones = ', '.join(str(phone) for phone in record.phone)
+            days_to_birthday = f"days to birthday: {record.days_to_birthday()}" if record.birthday else ""
+            print(f"{name} {phones} {days_to_birthday}")
+        print('*' * 100)
     
 
 @input_error

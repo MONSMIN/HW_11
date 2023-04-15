@@ -68,7 +68,7 @@ class Record:
     def __init__(self, name, phone, birthday=None):
         self.name = name
         self.phone = phone
-        self.birthday = birthday if birthday is not None else Birthday(None)
+        self.birthday = birthday
         
     def add_phone(self, phone:Phone):
         self.phone.append(phone)
@@ -85,9 +85,10 @@ class Record:
             self.birthday = birthday
         else:
             raise ValueError("Invalid birthday")
+        
 
     def days_to_birthday(self):
-        if not self.birthday.value:
+        if not self.birthday or not self.birthday.value:
             return None
         
         today = datetime.today()
@@ -98,6 +99,19 @@ class Record:
         
         delta = bday - today
         return delta.days
+
+    # def days_to_birthday(self):
+    #     if not self.birthday.value:
+    #         return None
+        
+    #     today = datetime.today()
+    #     bday = datetime.strptime(self.birthday.value, "%d.%m.%Y").replace(year=today.year)
+        
+    #     if bday < today:
+    #         bday = bday.replace(year=today.year + 1)
+        
+    #     delta = bday - today
+    #     return delta.days
 
 
 class AddressBook(UserDict):
